@@ -117,10 +117,10 @@ export function HomeHero({ services }: HomeHeroProps) {
         <p className="mt-6 text-sm text-muted">
           O escribinos por{' '}
           <a
-            href={`https://wa.me/+541123992527?text=Hola%20Andres,%20quiero%20consultar%20por%20una%20reparacion.`}
+            href={`https://wa.me/+541****2527?text=Hola%20Andres,%20quiero%20consultar%20por%20una%20reparacion.`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-accent hover:underline hover:text-accent-light"
+            className="inline-flex items-center justify-center rounded-md h-10 px-5 text-sm font-semibold bg-accent text-white hover:bg-accent-dark transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             WhatsApp
           </a>
