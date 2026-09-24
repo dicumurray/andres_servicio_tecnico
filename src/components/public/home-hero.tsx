@@ -104,7 +104,7 @@ export function HomeHero({ services }: HomeHeroProps) {
         <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
           <Link
             href="/turnos"
-            className="inline-flex items-center justify-center rounded-md h-11 px-6 text-sm font-semibold bg-accent text-white hover:bg-accent-dark transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+            className="inline-flex items-center justify-center rounded-md border border-accent bg-accent/10 h-11 px-6 text-sm font-semibold text-body hover:bg-accent hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
           >
             Solicitar diagnóstico
           </Link>
@@ -123,7 +123,7 @@ export function HomeHero({ services }: HomeHeroProps) {
             href="https://wa.me/541123992527?text=Hola%20Andres,%20quiero%20consultar%20por%20una%20reparacion."
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-md h-10 px-5 text-sm font-semibold bg-accent text-white hover:bg-accent-dark transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="inline-flex items-center justify-center rounded-md border border-accent bg-accent/10 h-10 px-5 text-sm font-semibold text-body hover:bg-accent hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             WhatsApp
           </a>
