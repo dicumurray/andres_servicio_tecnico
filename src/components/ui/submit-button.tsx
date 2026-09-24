@@ -9,7 +9,7 @@ export function SubmitButton({ children, className, disabled, ...props }: React.
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex items-center justify-center gap-2 rounded-md h-11 px-6 text-sm font-semibold bg-accent text-white transition-all hover:bg-accent-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="inline-flex items-center justify-center gap-2 rounded-md border border-accent bg-elevated h-11 px-6 text-sm font-semibold text-accent dark:text-accent-light transition-all hover:bg-accent hover:text-white dark:hover:bg-accent-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
       {...props}
     >
       {pending ? (

@@ -120,7 +120,7 @@ export default async function ServicesPage({ searchParams }: PageProps) {
                 <div className="mt-6 flex gap-3">
                   <Link
                     href={`/turnos?service=${s.slug}`}
-                    className="inline-flex items-center justify-center rounded-md h-10 px-5 text-sm font-semibold bg-accent text-white hover:bg-accent-dark transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    className="inline-flex items-center justify-center rounded-md border border-accent bg-elevated h-10 px-5 text-sm font-semibold text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:bg-accent-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
                     Solicitar turno para este servicio
                   </Link>

@@ -55,7 +55,7 @@ export function AppHeader() {
         <div className="flex items-center gap-2">
           <Link
             href="/turnos"
-            className="hidden sm:inline-flex items-center justify-center rounded-md h-9 px-4 text-sm font-medium bg-accent text-white hover:bg-accent-dark transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="hidden sm:inline-flex items-center justify-center rounded-md border border-accent bg-elevated h-9 px-4 text-sm font-medium text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:bg-accent-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             Solicitar turno
           </Link>

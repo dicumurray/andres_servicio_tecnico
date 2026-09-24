@@ -84,7 +84,7 @@ export default function MiCuentaPage() {
           <div className="mt-6 flex gap-3">
             <Link
               href="/turnos"
-              className="flex-1 inline-flex items-center justify-center rounded-md h-11 px-5 text-sm font-medium bg-accent text-white hover:bg-accent-dark transition-colors"
+              className="flex-1 inline-flex items-center justify-center rounded-md border border-accent bg-elevated h-11 px-5 text-sm font-medium text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:bg-accent-light transition-colors"
             >
               Solicitar nuevo turno
             </Link>

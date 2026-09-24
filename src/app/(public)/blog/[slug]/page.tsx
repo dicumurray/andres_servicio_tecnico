@@ -146,7 +146,7 @@ export default async function BlogPostPage({ params }: PostProps) {
               href={`https://wa.me/+541****2527?text=Hola%20Andres,%20tengo%20una%20duda%20sobre%20tu%20artículo.`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-md h-11 px-6 text-sm font-semibold bg-accent text-white hover:bg-accent-dark transition-colors"
+              className="inline-flex items-center justify-center rounded-md border border-accent bg-elevated h-11 px-6 text-sm font-semibold text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:bg-accent-light transition-colors"
             >
               Consultar por WhatsApp
             </a>

@@ -6,7 +6,7 @@ const buttonVariants = tv({
   base: 'inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]',
   variants: {
     variant: {
-      default: 'bg-accent text-white hover:bg-accent-dark shadow-sm',
+      default: 'border border-accent bg-elevated text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:bg-accent-light shadow-sm',
       secondary: 'bg-tech-600 text-tech-100 hover:bg-tech-500',
       ghost: 'text-body hover:bg-muted hover:text-body',
       link: 'text-accent underline-offset-4 hover:underline',

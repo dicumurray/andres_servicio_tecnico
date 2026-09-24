@@ -69,7 +69,7 @@ export default function AdminRegisterPage() {
               <div className="mt-4">
                 <Link
                   href="/admin/login"
-                  className="inline-flex items-center justify-center rounded-md h-10 px-5 text-sm font-medium bg-accent text-white hover:bg-accent-dark transition-colors"
+                  className="inline-flex items-center justify-center rounded-md border border-accent bg-elevated h-10 px-5 text-sm font-medium text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:bg-accent-light transition-colors"
                 >
                   Ir al inicio de sesión
                 </Link>
