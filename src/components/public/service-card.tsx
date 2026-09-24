@@ -61,9 +61,9 @@ export function ServiceCard({ service, variant = 'default' }: ServiceCardProps) 
       </div>
 
       {/* Flecha */}
-      <div className="mt-4 flex items-center gap-1 text-xs text-accent group-hover:text-accent-light opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="mt-4 flex items-center gap-1 text-xs text-accent">
         Más información
-        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true"/>
       </div>
     </Link>
   )
