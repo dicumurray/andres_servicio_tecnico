@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
-import { createAdminClient } from '@/lib/supabase-server'
+import { createAdminClient, createPublicClient } from '@/lib/supabase-server'
 import type { Appointment, AppointmentInsert, Service } from '@/types/database'
 
 type AppointmentApiDatabase = {
@@ -83,8 +83,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const supabase = await createAdminClient<AppointmentApiDatabase>()
-    const { data: service, error: serviceError } = await supabase
+    const publicClient = createPublicClient<AppointmentApiDatabase>()
+    const { data: service, error: serviceError } = await publicClient
       .from('services')
       .select('id, estimated_duration')
       .eq('id', input.service_id)
@@ -99,7 +99,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'El servicio seleccionado ya no está disponible.' }, { status: 400 })
     }
 
-    const { data: appointment, error } = await supabase
+    const adminClient = createAdminClient<AppointmentApiDatabase>()
+    const { data: appointment, error } = await adminClient
       .from('appointments')
       .insert({
         service_id: service.id,

@@ -39,6 +39,23 @@ export async function createClient() {
   )
 }
 
+export function createPublicClient<Schema extends object = object>() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !anonKey) {
+    throw new Error('Faltan las variables públicas de entorno para conectar con Supabase.')
+  }
+
+  return createSupabaseClient<Schema>(supabaseUrl, anonKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+      detectSessionInUrl: false,
+    },
+  })
+}
+
 /**
  * Cliente con servicio role — solo para uso server-side administrativo.
  * NUNCA exponer al cliente.
