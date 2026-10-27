@@ -22,7 +22,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   if (!slug) {
     return {
       title: 'Servicios',
-      description: 'Catálogo de servicios de Andrés Servicio Técnico. Reparación de celulares, electrónica, placas, fuentes, UPS y más en La Plata, Buenos Aires.',
+      description: 'Servicios para celulares y computadoras en Andrés Servicio Técnico.',
     }
   }
 
@@ -31,13 +31,15 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     .from('services')
     .select('seo_title, seo_description')
     .eq('slug', slug)
+    .eq('status', 'active')
+    .returns<Pick<PublicService, 'seo_title' | 'seo_description'>[]>()
     .single()
 
   if (!data) return { title: 'Servicio' }
 
   return {
-    title: (data as any).seo_title ?? `Servicio: ${slug}`,
-    description: (data as any).seo_description,
+    title: data.seo_title ?? `Servicio: ${slug}`,
+    description: data.seo_description,
   }
 }
 
@@ -53,13 +55,15 @@ export default async function ServicesPage({ searchParams }: PageProps) {
       .from('services')
       .select('*')
       .eq('slug', slug)
+      .eq('status', 'active')
+      .returns<PublicService[]>()
       .single()
 
     if (error || !service) {
       notFound()
     }
 
-    const s = service as unknown as PublicService
+    const s = service
 
     return (
       <>
@@ -85,7 +89,7 @@ export default async function ServicesPage({ searchParams }: PageProps) {
                 )}
 
                 {s.full_description && (
-                  <div className="text-sm text-muted prose prose-sm max-w-none">
+                  <div className="text-sm text-muted prose prose-sm max-w-none whitespace-pre-line">
                     {s.full_description}
                   </div>
                 )}
@@ -113,7 +117,9 @@ export default async function ServicesPage({ searchParams }: PageProps) {
                   )}
                   <div>
                     <dt className="text-muted">Categoría</dt>
-                    <dd className="font-medium text-body">{s.category ?? 'General'}</dd>
+                    <dd className="font-medium text-body">
+                      {s.category === 'pc' ? 'Computadoras' : s.category === 'celulares' ? 'Celulares' : s.category ?? 'General'}
+                    </dd>
                   </div>
                 </dl>
 
@@ -140,12 +146,13 @@ export default async function ServicesPage({ searchParams }: PageProps) {
     .select('*')
     .eq('status', 'active')
     .order('sort_order', { ascending: true })
+    .returns<PublicService[]>()
 
   if (error) {
     console.error('Error cargando servicios:', error)
   }
 
-  const servicesList = (services ?? []) as unknown as PublicService[]
+  const servicesList = services ?? []
 
   return (
     <>
@@ -155,8 +162,7 @@ export default async function ServicesPage({ searchParams }: PageProps) {
           <div className="mx-auto max-w-6xl">
             <h1 className="text-3xl font-bold text-body mb-2">Servicios</h1>
             <p className="text-base text-muted mb-8 max-w-2xl">
-              Catálogo de servicios de Andrés Servicio Técnico. Reparación de celulares, electrónica, placas, fuentes, UPS y más.
-              Si no encontramos tu servicio, preguntanos.
+              Trabajos disponibles para celulares y computadoras, organizados por tipo de equipo.
             </p>
             <ServiceList services={servicesList} />
           </div>

@@ -27,6 +27,10 @@ export function ServiceList({ services }: ServiceListProps) {
   }
 
   const categories = Object.keys(grouped).sort()
+  const categoryLabels: Record<string, string> = {
+    celulares: 'Celulares',
+    pc: 'Computadoras',
+  }
 
   return (
     <div className="space-y-10">
@@ -45,7 +49,9 @@ export function ServiceList({ services }: ServiceListProps) {
       {/* Servicios por categoría */}
       {categories.map(category => (
         <section key={category}>
-          <h2 className="text-sm font-semibold text-muted uppercase tracking-wider mb-3">{category}</h2>
+          <h2 className="text-sm font-semibold text-muted uppercase tracking-wider mb-3">
+            {categoryLabels[category] ?? category}
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {grouped[category].map(service => (
               <ServiceCard key={service.id} service={service} />

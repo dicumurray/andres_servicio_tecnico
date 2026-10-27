@@ -17,7 +17,7 @@ export function ServiceCard({ service, variant = 'default' }: ServiceCardProps) 
 
   return (
     <Link
-      href={`/servicios/${service.slug}`}
+      href={`/servicios?slug=${service.slug}`}
       className={cn(
         'group block rounded-lg border border-default bg-elevated p-5 transition-all duration-150',
         'hover:border-accent hover:shadow-soft hover:-translate-y-0.5',

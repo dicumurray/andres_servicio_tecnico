@@ -1,9 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
 import { z } from 'zod'
-import { createSupabaseWebClient } from '@/lib/supabase-web'
 import { Button, Input, Select, Textarea, Label } from '@/components/ui/primitives'
 import { SubmitButton } from '@/components/ui/submit-button'
 import { Alert } from '@/components/ui/alert'
@@ -47,9 +45,7 @@ const initialForm: FormData = {
 }
 
 export function AppointmentForm({ services }: { services: ServiceOption[] }) {
-  const router = useRouter()
-  const supabase = createSupabaseWebClient()
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
   const [step, setStep] = useState<'service' | 'datetime' | 'personal' | 'confirm' | 'done'>('service')
   const [form, setForm] = useState<FormData>(initialForm)
   const [errors, setErrors] = useState<Partial<FormData>>({})
@@ -147,8 +143,7 @@ export function AppointmentForm({ services }: { services: ServiceOption[] }) {
   }
 
   const handleWhatsApp = async () => {
-    const service = services.find(s => s.id === form.service_id)
-    const message = `Hola Andrés, quiero solicitar un turno para revisar un ${form.device_brand} ${form.device_model} que no carga.`
+    const message = `Hola Andrés, quiero solicitar un turno para revisar un ${form.device_brand} ${form.device_model}. La falla que presenta es: ${form.failure_description}.`
     const encoded = encodeURIComponent(message)
     window.open(`https://wa.me/+541123992527?text=${encoded}`, '_blank')
     setWhatsappSuccess(true)
@@ -156,45 +151,66 @@ export function AppointmentForm({ services }: { services: ServiceOption[] }) {
 
   const handleSubmit = (formData: FormData) => {
     startTransition(async () => {
-      const supabase = createSupabaseWebClient()
-
-      const { data: { user } } = await supabase.auth.getUser()
-
       const appointmentData = {
         service_id: formData.service_id,
-        scheduled_at: `${formData.date}T${formData.time}:00`,
-        duration_minutes: services.find(s => s.id === formData.service_id)?.duration ?? 60,
-        status: 'requested',
-        customer_name: formData.name,
-        customer_surname: formData.surname,
-        customer_phone: formData.phone,
-        customer_email: formData.email,
+        date: formData.date,
+        time: formData.time,
+        name: formData.name,
+        surname: formData.surname,
+        phone: formData.phone,
+        email: formData.email || '',
         device_brand: formData.device_brand,
         device_model: formData.device_model,
         failure_description: formData.failure_description,
-        notes: formData.notes,
+        notes: formData.notes || '',
       }
 
-      const { data: insertData, error } = await supabase
-        .from('appointments')
-        .insert({
-          ...appointmentData,
+      let response: Response
+      try {
+        response = await fetch('/api/appointments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(appointmentData),
         })
-        .select('appointment_number, id')
-        .single()
-
-      if (error) {
-        console.error('Error creando appointment:', error)
-        setFormErrors('No se pudo crear el turno. Intentá nuevamente.')
+      } catch (error) {
+        console.error('Error conectando con el servicio de turnos:', error)
+        setFormErrors('No se pudo conectar para crear el turno. Revisá tu conexión e intentá nuevamente.')
         return
       }
 
-      // El appointment_number se genera con la función de DB (generate_appointment_number).
-      // En desarrollo sin DB connected, usamos placeholder.
-      const appointmentNumber = (insertData as { appointment_number?: string; id?: string } | null)?.appointment_number ?? `TUR-${new Date().getFullYear()}-000001`
+      let responseBody: unknown
+      try {
+        responseBody = await response.json()
+      } catch (error) {
+        console.error('Respuesta no válida del servicio de turnos:', error)
+        setFormErrors('No se pudo procesar la respuesta al crear el turno. Intentá nuevamente.')
+        return
+      }
+
+      const parsedResponse = z.object({
+        appointment_number: z.string().optional(),
+        error: z.string().optional(),
+      }).safeParse(responseBody)
+
+      if (!parsedResponse.success) {
+        console.error('Respuesta inesperada del servicio de turnos:', responseBody)
+        setFormErrors('No se pudo procesar la respuesta al crear el turno. Intentá nuevamente.')
+        return
+      }
+
+      if (!response.ok) {
+        setFormErrors(parsedResponse.data.error ?? 'No se pudo crear el turno. Intentá nuevamente.')
+        return
+      }
+
+      if (!parsedResponse.data.appointment_number) {
+        console.error('La respuesta del servicio de turnos no incluye el número generado.')
+        setFormErrors('No se pudo confirmar el número del turno. Intentá nuevamente.')
+        return
+      }
 
       setSuccess({
-        appointment_number: appointmentNumber,
+        appointment_number: parsedResponse.data.appointment_number,
         message: 'Turno solicitado correctamente. Te enviaremos una confirmación por WhatsApp o email cuando esté disponible.',
       })
       setStep('done')

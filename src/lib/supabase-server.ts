@@ -6,6 +6,7 @@
  */
 
 import { createServerClient } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies as nextCookies } from 'next/headers'
 
 export async function createClient() {
@@ -42,28 +43,19 @@ export async function createClient() {
  * Cliente con servicio role — solo para uso server-side administrativo.
  * NUNCA exponer al cliente.
  */
-export async function createAdminClient() {
-  const cookieStore = await nextCookies()
+export function createAdminClient<Schema extends object = object>() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      cookies: {
-        get(name: string): string | undefined {
-          return cookieStore.get(name)?.value
-        },
-        set(name: string, value: string, options?: any) {
-          try {
-            cookieStore.set(name, value, options)
-          } catch {}
-        },
-        remove(name: string, options?: any) {
-          try {
-            cookieStore.set(name, '', { ...options, maxAge: 0 })
-          } catch {}
-        },
-      },
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error('Faltan las variables de entorno para conectar con Supabase como administrador.')
+  }
+
+  return createSupabaseClient<Schema>(supabaseUrl, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+      detectSessionInUrl: false,
     },
-  )
+  })
 }

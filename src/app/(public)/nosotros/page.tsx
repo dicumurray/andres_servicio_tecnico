@@ -1,9 +1,10 @@
 import { AppHeader } from '@/components/layout/app-header'
 import { AppFooter } from '@/components/layout/app-footer'
+import { serviceCatalog } from '@/lib/service-catalog'
 
 export const metadata = {
   title: 'Sobre nosotros',
-  description: 'Andrés Servicio Técnico — diagnóstico preciso y reparaciones con criterio. La Plata, Buenos Aires.',
+  description: 'Servicios para celulares y computadoras en Andrés Servicio Técnico.',
 }
 
 export default function NosotrosPage() {
@@ -14,43 +15,22 @@ export default function NosotrosPage() {
         <div className="mx-auto max-w-4xl">
           <h1 className="text-3xl font-bold text-body mb-2">Sobre nosotros</h1>
           <p className="text-base text-muted mb-8">
-            Servicio técnico de electrónica y celulares en La Plata, Buenos Aires.
+            Estos son los trabajos disponibles, organizados por tipo de equipo.
           </p>
 
-          <div className="rounded-lg border border-default bg-elevated p-6 mb-8">
-            <h2 className="text-lg font-semibold text-body mb-4">Nuestro enfoque</h2>
-            <p className="text-sm text-muted mb-4">
-              Trabajamos con un criterio claro: primero diagnosticamos, después reparamos. 
-              No recomendaramos un reemplazo si la reparación es viable.
-            </p>
-            <p className="text-sm text-muted">
-              Nos especializamos en la reparación de celulares, electrónica de consumo y hardware. 
-              Cada equipo recibe atención individual.
-            </p>
-          </div>
-
-          <div className="rounded-lg border border-default bg-elevated p-6 mb-8">
-            <h2 className="text-lg font-semibold text-body mb-4">Servicios</h2>
-            <ul className="space-y-2 text-sm text-muted">
-              <li className="flex justify-between">
-                <span>Celulares y tablets</span>
-                <span className="text-body">Reparación de pantalla, batería, puertos, conectividad</span>
-              </li>
-              <li className="flex justify-between">
-                <span>Electrónica de consumo</span>
-                <span className="text-body">Audífonos, parlantes, cargadores, dispositivos</span>
-              </li>
-              <li className="flex justify-between">
-                <span>Hardware y PC</span>
-                <span className="text-body">Placas, fuentes, UPS, periféricos</span>
-              </li>
-            </ul>
+          <div className="grid gap-6 sm:grid-cols-2">
+            {serviceCatalog.map((category) => (
+              <section key={category.slug} className="rounded-lg border border-default bg-elevated p-6">
+                <h2 className="text-lg font-semibold text-body mb-4">{category.name}</h2>
+                <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
+                  {category.services.map((service) => <li key={service}>{service}</li>)}
+                </ul>
+              </section>
+            ))}
           </div>
 
           <div className="mt-8 rounded-lg border border-default bg-muted/50 p-6 text-center">
-            <p className="text-muted mb-4">
-              Consultanos por WhatsApp.
-            </p>
+            <p className="text-muted mb-4">Consultas por WhatsApp.</p>
             <a
               href={`https://wa.me/+541123992527?text=Hola%20Andres,%20quiero%20más%20información.`}
               target="_blank"

@@ -32,12 +32,6 @@ export function AppHeader() {
             Reparaciones
           </Link>
           <Link
-            href="/blog"
-            className="text-muted hover:text-body transition-colors hover:underline underline-offset-4"
-          >
-            Blog
-          </Link>
-          <Link
             href="/turnos"
             className="text-muted hover:text-body transition-colors hover:underline underline-offset-4"
           >

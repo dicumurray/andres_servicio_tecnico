@@ -1,11 +1,6 @@
 import Link from 'next/link'
-import type { PublicService } from '@/types/service'
 
-interface HomeHeroProps {
-  services: PublicService[]
-}
-
-export function HomeHero({ services }: HomeHeroProps) {
+export function HomeHero() {
   return (
     <section className="relative overflow-hidden border-b border-default px-4 py-14 sm:py-20 lg:py-24">
       {/* Fondo sutil — línea de PCB / trazado técnico */}
@@ -66,7 +61,7 @@ export function HomeHero({ services }: HomeHeroProps) {
         </svg>
       </div>
 
-      <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="relative mx-auto max-w-6xl">
         <div className="max-w-2xl">
         {/* Mark */}
         <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 ring-1 ring-accent/20">
@@ -96,8 +91,7 @@ export function HomeHero({ services }: HomeHeroProps) {
         </p>
 
         <p className="mt-4 max-w-xl text-base text-muted sm:text-lg">
-          Reparamos celulares y electrónica con un proceso claro: revisamos la falla,
-          presupuestamos antes de avanzar y probamos el equipo antes de entregarlo.
+          Servicios para celulares y computadoras. Consultá los trabajos disponibles para cada tipo de equipo.
         </p>
 
         {/* CTAs */}
@@ -128,37 +122,6 @@ export function HomeHero({ services }: HomeHeroProps) {
             WhatsApp
           </a>
         </p>
-      </div>
-
-      <div className="relative hidden rounded-2xl border border-default bg-elevated/80 p-6 shadow-soft backdrop-blur-sm lg:block">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Trabajamos con método</p>
-        <div className="mt-6 space-y-5">
-          <div className="flex items-start gap-3">
-            <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-accent" />
-            <div>
-              <p className="text-sm font-semibold text-body">Diagnóstico antes de reparar</p>
-              <p className="mt-1 text-sm text-muted">Te explicamos qué encontramos y por qué.</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-accent" />
-            <div>
-              <p className="text-sm font-semibold text-body">Presupuesto claro</p>
-              <p className="mt-1 text-sm text-muted">Aprobás el trabajo antes de que avancemos.</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-accent" />
-            <div>
-              <p className="text-sm font-semibold text-body">Prueba y garantía</p>
-              <p className="mt-1 text-sm text-muted">Entregamos el equipo funcionando y verificado.</p>
-            </div>
-          </div>
-        </div>
-        <div className="mt-7 border-t border-default pt-4 text-xs text-muted">
-          {services.length > 0 ? `${services.length} servicios disponibles` : 'Atención personalizada'}
-          <span className="px-2 text-accent">·</span> La Plata, Buenos Aires
-        </div>
       </div>
       </div>
     </section>

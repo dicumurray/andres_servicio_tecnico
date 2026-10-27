@@ -6,7 +6,7 @@ import { AppFooter } from '@/components/layout/app-footer'
 
 export const metadata: Metadata = {
   title: 'Servicios',
-  description: 'Catálogo de servicios de Andrés Servicio Técnico. Reparación de celulares, electrónica, placas, fuentes, UPS y más en La Plata, Buenos Aires.',
+  description: 'Servicios para celulares y computadoras en Andrés Servicio Técnico.',
 }
 
 export default function ServicesPage() {

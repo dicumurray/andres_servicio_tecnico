@@ -21,19 +21,16 @@ export function HomeServices({ services, featuredServices }: HomeServicesProps) 
     )
   }
 
-  // Separar servicios destacados de los comunes.
   const featured = featuredServices.slice(0, 3)
-  const rest = services.filter(s => !featuredServices.find(f => f.id === s.id))
 
   return (
     <section className="px-4 py-16 bg-muted/30">
       <div className="mx-auto max-w-6xl">
-        {/* Sección destacados */}
         {featured.length > 0 && (
           <div className="mb-12">
-            <h2 className="text-lg font-semibold text-body mb-2">Servicios destacados</h2>
+            <h2 className="text-lg font-semibold text-body mb-2">Servicios</h2>
             <p className="text-sm text-muted mb-6">
-              Estos son algunos de los servicios que ofrecemos habitualmente.
+              Servicios disponibles para celulares y computadoras.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {featured.map(service => (
@@ -43,11 +40,12 @@ export function HomeServices({ services, featuredServices }: HomeServicesProps) 
           </div>
         )}
 
-        {/* Todos los servicios */}
         <div>
-          <h2 className="text-lg font-semibold text-body mb-2">Todos los servicios</h2>
+          <h2 className="text-lg font-semibold text-body mb-2">
+            {featured.length > 0 ? 'Más servicios' : 'Servicios'}
+          </h2>
           <p className="text-sm text-muted mb-6">
-            Consultá el servicio que necesitás. Si no está en la lista, preguntanos.
+            Trabajos organizados por tipo de equipo.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {services.map(service => (

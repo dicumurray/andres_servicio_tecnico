@@ -14,13 +14,13 @@ export const metadata: Metadata = {
     default: 'Andrés Servicio Técnico',
     template: '%s | Andrés Servicio Técnico',
   },
-  description: 'Diagnóstico preciso. Reparaciones con criterio. Servicio técnico de electrónica y celulares en La Plata, Buenos Aires.',
+  description: 'Servicios de reparación y mantenimiento de celulares y computadoras en Andrés Servicio Técnico.',
   keywords: [
     'servicio técnico La Plata',
     'reparación celulares La Plata',
-    'reparación electrónica La Plata',
-    'diagnóstico electrónico La Plata',
-    'reparación hardware La Plata',
+    'servicio técnico computadoras La Plata',
+    'diagnóstico de fallas de hardware',
+    'recuperación de archivos HDD SSD',
   ],
   authors: [{ name: 'Andrés Servicio Técnico' }],
   openGraph: {
