@@ -1,0 +1,150 @@
+name: Supabase local validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  SUPABASE_CLI_VERSION: 2.122.0
+  SUPABASE_CONFIG: supabase/config.toml
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Reject hosted credentials and production references
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test ! -f .env.local
+          test ! -f supabase/.env
+          if find supabase/.temp -type f -print -quit 2>/dev/null | grep -q .; then
+            echo "Supabase temporary files must not be present in the checkout."
+            exit 1
+          fi
+
+          if git grep -nE \
+            -- ':!.github/workflows/supabase-validation.yml' \
+            'gpcnwysryrwxjlkzwuho|supabase\.co|postgres(ql)?://[^[:space:]]+:[^[:space:]]+@|-----BEGIN (RSA|OPENSSH|PRIVATE) KEY-----|eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{10,}\.'; then
+            echo "Hosted Supabase references or credentials are not allowed in this job."
+            exit 1
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install application dependencies
+        run: npm ci
+
+      - name: Ensure PostgreSQL client is available
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v psql >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install --yes --no-install-recommends postgresql-client
+          fi
+          psql --version
+
+      - name: Start isolated Supabase
+        shell: bash
+        run: npx --yes "supabase@${SUPABASE_CLI_VERSION}" start
+
+      - name: Apply migrations without business seeds
+        shell: bash
+        run: npx --yes "supabase@${SUPABASE_CLI_VERSION}" db reset --no-seed
+
+      - name: Export local connection URL without printing it
+        id: local-db
+        shell: bash
+        run: |
+          set -euo pipefail
+          db_url="$(
+            npx --yes "supabase@${SUPABASE_CLI_VERSION}" status -o env |
+              sed -n 's/^DB_URL=//p' |
+              head -n 1
+          )"
+          test -n "$db_url"
+          echo "::add-mask::$db_url"
+          {
+            echo "DB_URL<<EOF"
+            echo "$db_url"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run migration diagnostics
+        env:
+          SUPABASE_DB_URL: ${{ steps.local-db.outputs.DB_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          report="$RUNNER_TEMP/migration-diagnostics.txt"
+          node scripts/run-migration-diagnostics.js "$report" >/dev/null
+          ! grep -q '"status": "blocked"' "$report"
+          ! grep -Eiq \
+            'postgres(ql)?://|supabase\.co|SUPABASE_.*KEY|eyJ[A-Za-z0-9_-]{20,}|password[[:space:]]*=' \
+            "$report"
+
+      - name: Check migration invariants
+        env:
+          SUPABASE_DB_URL: ${{ steps.local-db.outputs.DB_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          psql "$SUPABASE_DB_URL" \
+            --set=ON_ERROR_STOP=1 \
+            --file=scripts/ci/migration-invariants.sql \
+            >/dev/null
+
+      - name: Check concurrent appointment numbers
+        env:
+          SUPABASE_DB_URL: ${{ steps.local-db.outputs.DB_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          first="$RUNNER_TEMP/appointment-number-1.txt"
+          second="$RUNNER_TEMP/appointment-number-2.txt"
+
+          psql "$SUPABASE_DB_URL" --set=ON_ERROR_STOP=1 --tuples-only --no-align \
+            --command="SET ROLE service_role; SELECT public.generate_appointment_number();" \
+            > "$first" &
+          first_pid=$!
+          psql "$SUPABASE_DB_URL" --set=ON_ERROR_STOP=1 --tuples-only --no-align \
+            --command="SET ROLE service_role; SELECT public.generate_appointment_number();" \
+            > "$second" &
+          second_pid=$!
+
+          first_status=0
+          second_status=0
+          wait "$first_pid" || first_status=$?
+          wait "$second_pid" || second_status=$?
+          test "$first_status" -eq 0
+          test "$second_status" -eq 0
+          grep -Eq '^TUR-[0-9]{4}-[0-9]{6}$' "$first"
+          grep -Eq '^TUR-[0-9]{4}-[0-9]{6}$' "$second"
+          ! cmp -s "$first" "$second"
+
+      - name: Run application tests
+        run: npm test
+
+      - name: Build application
+        run: npm run build
+
+      - name: Stop isolated Supabase
+        if: ${{ always() }}
+        shell: bash
+        run: npx --yes "supabase@${SUPABASE_CLI_VERSION}" stop --no-backup
