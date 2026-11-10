@@ -1,39 +1,18 @@
 import { updateSession } from '@/lib/supabase-middleware'
 import { type NextRequest, NextResponse } from 'next/server'
 
-export async function middleware(request: NextRequest) {
-  // Actualizar sesión para todas las rutas.
+export async function proxy(request: NextRequest) {
   const response = await updateSession(request)
 
-  // Rutas públicas que no necesitan protección extra.
-  const publicPaths = [
-    '/',
-    '/servicios',
-    '/servicios/',
-    '/reparaciones',
-    '/reparaciones/',
-    '/proyectos',
-    '/proyectos/',
-    '/blog',
-    '/blog/',
-    '/turnos',
-    '/contacto',
-    '/nosotros',
-    '/estado',
-    '/admin/login',
-    '/admin/register',
-  ]
-
-  const isPublic = publicPaths.some(p => request.nextUrl.pathname.startsWith(p))
   const isAdmin = request.nextUrl.pathname.startsWith('/admin')
+  const isAdminAuthPage =
+    request.nextUrl.pathname === '/admin/login' ||
+    request.nextUrl.pathname === '/admin/register'
   const isClientArea = request.nextUrl.pathname.startsWith('/mi-cuenta')
 
-  if (isAdmin || isClientArea) {
-    // Verificar que haya sesión activa.
+  if ((isAdmin && !isAdminAuthPage) || isClientArea) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-    // Crear cliente mínimo solo para check de sesión.
     const { createServerClient } = await import('@supabase/ssr')
     const cookieStore = request.cookies
 
@@ -58,6 +37,23 @@ export async function middleware(request: NextRequest) {
       redirectUrl.searchParams.set('redirect', request.nextUrl.pathname)
       return NextResponse.redirect(redirectUrl)
     }
+
+    if (isAdmin && !isAdminAuthPage) {
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('role, status')
+        .eq('id', user.id)
+        .maybeSingle()
+      const profile = profileData as { role: string; status: string } | null
+
+      const isManager =
+        profile?.status === 'active' &&
+        (profile.role === 'admin' || profile.role === 'technician')
+
+      if (!isManager) {
+        return NextResponse.redirect(new URL('/admin/login?unauthorized=1', request.url))
+      }
+    }
   }
 
   return response
@@ -65,13 +61,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization)
-     * - favicon.ico (favicon)
-     * - sitemap.xml, robots.txt (SEO)
-     */
     '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
   ],
 }
