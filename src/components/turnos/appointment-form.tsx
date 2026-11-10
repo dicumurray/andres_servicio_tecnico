@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { Button, Input, Select, Textarea, Label } from '@/components/ui/primitives'
 import { SubmitButton } from '@/components/ui/submit-button'
 import { Alert } from '@/components/ui/alert'
+import { getWhatsAppUrl } from '@/lib/contact'
 
 // Tipos locales (el DB schema no existe en este entorno de desarrollo).
 interface ServiceOption {
@@ -44,10 +45,17 @@ const initialForm: FormData = {
   notes: '',
 }
 
-export function AppointmentForm({ services }: { services: ServiceOption[] }) {
+export function AppointmentForm({
+  services,
+  initialServiceSlug,
+}: {
+  services: ServiceOption[]
+  initialServiceSlug?: string
+}) {
   const [, startTransition] = useTransition()
+  const initialServiceId = services.find(service => service.slug === initialServiceSlug)?.id ?? ''
   const [step, setStep] = useState<'service' | 'datetime' | 'personal' | 'confirm' | 'done'>('service')
-  const [form, setForm] = useState<FormData>(initialForm)
+  const [form, setForm] = useState<FormData>(() => ({ ...initialForm, service_id: initialServiceId }))
   const [errors, setErrors] = useState<Partial<FormData>>({})
   const [formErrors, setFormErrors] = useState<string | null>(null)
   const [success, setSuccess] = useState<{ appointment_number: string; message: string } | null>(null)
@@ -144,8 +152,7 @@ export function AppointmentForm({ services }: { services: ServiceOption[] }) {
 
   const handleWhatsApp = async () => {
     const message = `Hola Andrés, quiero solicitar un turno para revisar un ${form.device_brand} ${form.device_model}. La falla que presenta es: ${form.failure_description}.`
-    const encoded = encodeURIComponent(message)
-    window.open(`https://wa.me/+541123992527?text=${encoded}`, '_blank')
+    window.open(getWhatsAppUrl(message), '_blank', 'noopener,noreferrer')
     setWhatsappSuccess(true)
   }
 
@@ -233,11 +240,22 @@ export function AppointmentForm({ services }: { services: ServiceOption[] }) {
           </p>
           <p className="mt-2 text-sm text-muted">{success.message}</p>
           <div className="mt-4 flex flex-col gap-2">
-            <SubmitButton onClick={() => setSuccess(null)} className="w-full">
+            <SubmitButton
+              onClick={() => {
+                setSuccess(null)
+                setStep('service')
+                setForm(initialForm)
+                setSelectedDate('')
+                setSelectedTime('')
+                setAvailableTimes([])
+                setFormErrors(null)
+              }}
+              className="w-full"
+            >
               Solicitar otro turno
             </SubmitButton>
             <a
-              href={`https://wa.me/+541123992527?text=Hola%20Andres,%20tengo%20el%20turno%20${success.appointment_number}`}
+              href={getWhatsAppUrl(`Hola Andrés, tengo el turno ${success.appointment_number}.`)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center w-full rounded-md h-10 px-5 text-sm font-medium bg-elevated text-body border border-default hover:bg-muted hover:text-body transition-colors"

@@ -6,13 +6,14 @@
  */
 
 import { createServerClient } from '@supabase/ssr'
+import type { CookieOptions } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies as nextCookies } from 'next/headers'
 
-export async function createClient() {
+export async function createClient<Schema extends object = object>() {
   const cookieStore = await nextCookies()
 
-  return createServerClient(
+  return createServerClient<Schema>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -20,14 +21,14 @@ export async function createClient() {
         get(name: string): string | undefined {
           return cookieStore.get(name)?.value
         },
-        set(name: string, value: string, options?: any) {
+        set(name: string, value: string, options?: CookieOptions) {
           try {
             cookieStore.set(name, value, options)
           } catch {
             // Headers ya enviados.
           }
         },
-        remove(name: string, options?: any) {
+        remove(name: string, options?: CookieOptions) {
           try {
             cookieStore.set(name, '', { ...options, maxAge: 0 })
           } catch {

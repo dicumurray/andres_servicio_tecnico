@@ -1,6 +1,5 @@
 import { useFormStatus } from 'react-dom'
 import { Loader2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 export function SubmitButton({ children, className, disabled, ...props }: React.ComponentPropsWithoutRef<'button'>) {
   const { pending } = useFormStatus()
@@ -8,8 +7,8 @@ export function SubmitButton({ children, className, disabled, ...props }: React.
   return (
     <button
       type="submit"
-      disabled={pending}
-      className="inline-flex items-center justify-center gap-2 rounded-md border border-accent bg-elevated h-11 px-6 text-sm font-semibold text-accent dark:text-accent-light transition-all hover:bg-accent hover:text-white dark:hover:bg-accent-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+      disabled={pending || disabled}
+      className={`inline-flex items-center justify-center gap-2 rounded-md border border-accent bg-elevated h-11 px-6 text-sm font-semibold text-accent dark:text-accent-light transition-all hover:bg-accent hover:text-white dark:hover:bg-accent-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${className ?? ''}`}
       {...props}
     >
       {pending ? (
