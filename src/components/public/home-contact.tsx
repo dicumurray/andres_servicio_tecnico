@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getWhatsAppUrl } from '@/lib/contact'
 
 export function HomeContact() {
   return (
@@ -17,7 +18,7 @@ export function HomeContact() {
             Solicitar turno
           </Link>
           <a
-            href={`https://wa.me/+541123992527?text=Hola%20Andres,%20quiero%20consultar%20por%20una%20reparacion.`}
+            href={getWhatsAppUrl('Hola Andrés, quiero consultar por una reparación.')}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center rounded-md h-11 px-6 text-sm font-medium bg-elevated text-body border border-default hover:bg-muted hover:text-body transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"

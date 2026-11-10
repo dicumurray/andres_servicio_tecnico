@@ -52,7 +52,7 @@ export function ServiceList({ services }: ServiceListProps) {
           <h2 className="text-sm font-semibold text-muted uppercase tracking-wider mb-3">
             {categoryLabels[category] ?? category}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {grouped[category].map(service => (
               <ServiceCard key={service.id} service={service} />
             ))}

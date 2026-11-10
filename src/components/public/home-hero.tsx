@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getWhatsAppUrl } from '@/lib/contact'
 
 export function HomeHero() {
   return (
@@ -62,7 +63,7 @@ export function HomeHero() {
       </div>
 
       <div className="relative mx-auto max-w-6xl">
-        <div className="max-w-2xl">
+        <div className="mx-auto max-w-5xl">
         {/* Mark */}
         <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 ring-1 ring-accent/20">
           <svg
@@ -82,16 +83,16 @@ export function HomeHero() {
           Servicio técnico en La Plata
         </p>
 
-        <h1 className="text-4xl font-bold tracking-tight text-body sm:text-5xl lg:text-6xl">
-          Reparar bien empieza por diagnosticar mejor.
+        <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-body sm:text-5xl lg:text-6xl">
+          Servicio técnico de celulares y computadoras
         </h1>
 
         <p className="mt-5 text-lg font-medium text-muted sm:text-xl">
-          Andrés Servicio Técnico
+          Diagnóstico, reparación y mantenimiento
         </p>
 
-        <p className="mt-4 max-w-xl text-base text-muted sm:text-lg">
-          Servicios para celulares y computadoras. Consultá los trabajos disponibles para cada tipo de equipo.
+        <p className="mt-4 max-w-2xl text-base text-muted sm:text-lg">
+          Consultá los servicios disponibles y solicitá un turno para tu equipo en La Plata.
         </p>
 
         {/* CTAs */}
@@ -114,7 +115,7 @@ export function HomeHero() {
         <p className="mt-5 text-sm text-muted">
           O escribinos por{' '}
           <a
-            href="https://wa.me/541123992527?text=Hola%20Andres,%20quiero%20consultar%20por%20una%20reparacion."
+            href={getWhatsAppUrl('Hola Andrés, quiero consultar por una reparación.')}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center rounded-md border border-accent bg-elevated h-10 px-5 text-sm font-semibold text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:bg-accent-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"

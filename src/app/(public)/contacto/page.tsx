@@ -1,5 +1,6 @@
 import { AppHeader } from '@/components/layout/app-header'
 import { AppFooter } from '@/components/layout/app-footer'
+import { getWhatsAppUrl } from '@/lib/contact'
 
 export const metadata = {
   title: 'Contacto',
@@ -32,7 +33,7 @@ export default function ContactoPage() {
                     Escribinos directamente por WhatsApp para consultas rápidas.
                   </p>
                   <a
-                    href={`https://wa.me/+541123992527?text=Hola%20Andres,%20quiero%20consultar.`}
+                    href={getWhatsAppUrl('Hola Andrés, quiero consultar.')}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center rounded-md border border-accent bg-elevated h-11 px-6 text-sm font-semibold text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:bg-accent-light transition-colors"
@@ -95,7 +96,7 @@ La Plata, Buenos Aires, Argentina
               No encontrás tu respuesta? Escribinos directamente.
             </p>
             <a
-              href={`https://wa.me/+541123992527?text=Hola%20Andres,%20tengo%20una%20pregunta.`}
+              href={getWhatsAppUrl('Hola Andrés, tengo una pregunta.')}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-md border border-accent bg-elevated h-11 px-6 text-sm font-semibold text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:bg-accent-light transition-colors"

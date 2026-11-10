@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getWhatsAppUrl } from '@/lib/contact'
 
 export function AppFooter() {
   return (
@@ -21,7 +22,7 @@ export function AppFooter() {
             <Link href="/reparaciones" className="hover:text-body hover:underline">Reparaciones</Link>
             <Link href="/turnos" className="hover:text-body hover:underline">Turnos</Link>
             <a
-              href={`https://wa.me/+541123992527?text=Hola%20Andres,%20quiero%20consultar%20por%20una%20reparacion.`}
+              href={getWhatsAppUrl('Hola Andrés, quiero consultar por una reparación.')}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-body hover:underline"

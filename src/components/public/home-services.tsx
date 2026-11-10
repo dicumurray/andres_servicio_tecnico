@@ -11,7 +11,7 @@ export function HomeServices({ services, featuredServices }: HomeServicesProps) 
   if (services.length === 0) {
     return (
       <section className="px-4 py-16">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-5xl">
           <h2 className="text-xl font-semibold text-body mb-4">Servicios</h2>
           <div className="rounded-lg border border-default bg-elevated p-6 text-center text-muted text-sm">
             No hay servicios publicados aún. Probablemente se están cargando.
@@ -32,7 +32,7 @@ export function HomeServices({ services, featuredServices }: HomeServicesProps) 
             <p className="text-sm text-muted mb-6">
               Servicios disponibles para celulares y computadoras.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               {featured.map(service => (
                 <ServiceCard key={service.id} service={service} />
               ))}
@@ -47,7 +47,7 @@ export function HomeServices({ services, featuredServices }: HomeServicesProps) 
           <p className="text-sm text-muted mb-6">
             Trabajos organizados por tipo de equipo.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {services.map(service => (
               <ServiceCard key={service.id} service={service} />
             ))}

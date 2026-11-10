@@ -1,6 +1,7 @@
 import { AppHeader } from '@/components/layout/app-header'
 import { AppFooter } from '@/components/layout/app-footer'
 import { serviceCatalog } from '@/lib/service-catalog'
+import { getWhatsAppUrl } from '@/lib/contact'
 
 export const metadata = {
   title: 'Sobre nosotros',
@@ -32,7 +33,7 @@ export default function NosotrosPage() {
           <div className="mt-8 rounded-lg border border-default bg-muted/50 p-6 text-center">
             <p className="text-muted mb-4">Consultas por WhatsApp.</p>
             <a
-              href={`https://wa.me/+541123992527?text=Hola%20Andres,%20quiero%20más%20información.`}
+              href={getWhatsAppUrl('Hola Andrés, quiero más información.')}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-md border border-accent bg-elevated h-11 px-6 text-sm font-semibold text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:bg-accent-light transition-colors"

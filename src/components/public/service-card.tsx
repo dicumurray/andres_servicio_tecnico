@@ -19,7 +19,7 @@ export function ServiceCard({ service, variant = 'default' }: ServiceCardProps) 
     <Link
       href={`/servicios?slug=${service.slug}`}
       className={cn(
-        'group block rounded-lg border border-default bg-elevated p-5 transition-all duration-150',
+        'group flex min-h-52 flex-col rounded-lg border border-default bg-elevated p-6 transition-all duration-150',
         'hover:border-accent hover:shadow-soft hover:-translate-y-0.5',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
         variant === 'highlighted' && 'border-accent bg-accent/[0.03]',
@@ -61,7 +61,7 @@ export function ServiceCard({ service, variant = 'default' }: ServiceCardProps) 
       </div>
 
       {/* Flecha */}
-      <div className="mt-4 flex items-center gap-1 text-xs text-accent">
+      <div className="mt-auto flex items-center gap-1 pt-6 text-xs text-accent">
         Más información
         <ArrowRight className="h-3.5 w-3.5" aria-hidden="true"/>
       </div>

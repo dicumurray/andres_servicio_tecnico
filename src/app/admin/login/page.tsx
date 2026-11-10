@@ -2,10 +2,10 @@
 
 import { AppHeader } from '@/components/layout/app-header'
 import { AppFooter } from '@/components/layout/app-footer'
-import Link from 'next/link'
+import { getWhatsAppUrl } from '@/lib/contact'
 import { useState, useTransition } from 'react'
 import { createSupabaseWebClient } from '@/lib/supabase-web'
-import { Button, Input, Label } from '@/components/ui/primitives'
+import { Input, Label } from '@/components/ui/primitives'
 import { SubmitButton } from '@/components/ui/submit-button'
 import { Alert } from '@/components/ui/alert'
 
@@ -109,20 +109,11 @@ export default function AdminLoginPage() {
               </SubmitButton>
             </form>
 
-            <div className="mt-4 text-center">
-              <p className="text-sm text-muted">
-                No tenés cuenta?{' '}
-                <Link href="/admin/register" className="text-accent hover:underline">
-                  Crear una cuenta
-                </Link>
-              </p>
-            </div>
-
             <div className="mt-6 rounded-md border border-default bg-muted/50 p-4 text-sm text-muted">
               <p>
                 <strong className="text-body">¿Necesitás ayuda?</strong>{' '}
                 <a
-                  href={`https://wa.me/+541123992527?text=Hola%20Andres,%20necesito%20ayuda%20con%20el%20acceso.%20`}
+                  href={getWhatsAppUrl('Hola Andrés, necesito ayuda con el acceso.')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-accent hover:underline"
