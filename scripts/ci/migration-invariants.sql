@@ -185,6 +185,7 @@ DECLARE
   v_owner name;
   v_security_definer boolean;
   v_config text[];
+  v_rls_enabled boolean;
 BEGIN
   SELECT p.oid::regprocedure,
          pg_get_userbyid(p.proowner),
@@ -221,6 +222,17 @@ BEGIN
      OR has_table_privilege('authenticated', 'public.number_sequences', 'SELECT')
      OR has_table_privilege('service_role', 'public.number_sequences', 'SELECT') THEN
     RAISE EXCEPTION '0005 number_sequences remains directly readable';
+  END IF;
+
+  SELECT c.relrowsecurity
+    INTO v_rls_enabled
+  FROM pg_class AS c
+  JOIN pg_namespace AS n ON n.oid = c.relnamespace
+  WHERE n.nspname = 'public'
+    AND c.relname = 'number_sequences';
+
+  IF v_rls_enabled IS DISTINCT FROM true THEN
+    RAISE EXCEPTION '0008 number_sequences row level security is disabled';
   END IF;
 END
 $$;
